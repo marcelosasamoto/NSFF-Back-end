@@ -12,10 +12,19 @@ module.exports = {
         return res.json(user);
     },
     async store(req, res) {
+
+        const userExist = await User.findOne({email: req.body.email }) //retorna email se existir
+        if (userExist){
+            return res.status(400).json( {error: 'User already exists'}); //retorna que o usuario ja existe
+        }
         const user = await User.create(req.body);
         return res.json(user);
     },
     async update(req, res) {
+        const emailExist = await User.findOne({email: req.body.email }) //retorna email se existir
+        if (emailExist){
+            return res.status(400).json( {error: 'Email already exists'}); //retorna que o usuario ja existe
+        }
         const user = await User.findByIdAndUpdate(req.params.id, req.body , { new: true});
 
         return res.json(user );
