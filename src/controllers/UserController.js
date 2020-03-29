@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
 const User = mongoose.model('User');
+
+const saltRounds = 8;
+
 
 module.exports = {
     async index(req, res) {
@@ -9,6 +12,7 @@ module.exports = {
     },
     async show (req, res) {
         const user = await User.findOne({_id:req.params.id});
+        //console.log(req.userId)
         return res.json(user);
     },
 
@@ -18,8 +22,21 @@ module.exports = {
         if (userExist){
             return res.status(400).json( {error: 'E-mail já está em uso'}); //retorna que o usuario ja existe
         }
-        const user = await User.create(req.body);
-        return res.json(user);
+        const { name, email, password } = req.body;
+        
+        bcrypt.hash(password, saltRounds, function (err,hash){
+            const user = User.create({
+                name: name,
+                email: email,
+                password: hash
+            }).then(function(data){
+                if (data){
+                    res.json(data)
+                }
+            });
+        });
+
+    
     },
     async update(req, res) {
         const emailExist = await User.findOne({email: req.body.email }) //retorna email se existir
@@ -33,7 +50,7 @@ module.exports = {
     },
 
     async destroy(req, res) {
-        await User.findByIdAndRemove(req.params.id);
+        //await User.findByIdAndRemove(req.params.id);
         return res.send()
     },
 
