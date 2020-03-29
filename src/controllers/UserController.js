@@ -8,14 +8,15 @@ module.exports = {
         return res.json(user);
     },
     async show (req, res) {
-        const user = await User.findById(req.params.id);
+        const user = await User.findOne({_id:req.params.id});
         return res.json(user);
     },
+
     async store(req, res) {
 
         const userExist = await User.findOne({email: req.body.email }) //retorna email se existir
         if (userExist){
-            return res.status(400).json( {error: 'User already exists'}); //retorna que o usuario ja existe
+            return res.status(400).json( {error: 'E-mail já está em uso'}); //retorna que o usuario ja existe
         }
         const user = await User.create(req.body);
         return res.json(user);
@@ -23,14 +24,17 @@ module.exports = {
     async update(req, res) {
         const emailExist = await User.findOne({email: req.body.email }) //retorna email se existir
         if (emailExist){
-            return res.status(400).json( {error: 'Email already exists'}); //retorna que o usuario ja existe
+            console.log(emailExist);
+            return res.status(400).json( {error: 'E-mail já está em uso'}); //retorna que o usuario ja existe
         }
-        const user = await User.findByIdAndUpdate(req.params.id, req.body , { new: true});
-
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true});
+                                                               //req.body atualiza todo o conteudo que estiver no body
         return res.json(user );
     },
+
     async destroy(req, res) {
         await User.findByIdAndRemove(req.params.id);
         return res.send()
     },
+
 };
