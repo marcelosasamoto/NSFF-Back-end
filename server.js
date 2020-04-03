@@ -15,4 +15,4 @@ requireDir('./src/models');
 // Rotas
 app.use('/api', require("./src/routes"));
 
-app.listen(3200,'192.168.50.246');
+app.listen(3200,'192.168.50.16');
