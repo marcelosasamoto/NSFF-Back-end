@@ -10,7 +10,7 @@ module.exports = {
             email: email
         }).then (function(user) {
             if(!user) {
-                res.json("Email não encontrado");
+                res.json({error:"Email não encontrado"});
             }else {
                 bcrypt.compare(password,user.password, function(err, result){
                     if (result == true){
@@ -22,7 +22,7 @@ module.exports = {
                             })
                         });
                     } else{
-                        res.json({message: 'Senha invalida'});
+                        res.json({error: 'Senha invalida'});
                     }
                 });
             }
