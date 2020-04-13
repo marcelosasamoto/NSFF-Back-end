@@ -11,8 +11,8 @@ module.exports = {
         return res.json(user);
     },
     async show (req, res) {
-        const user = await User.findOne({_id:req.params.id});
-        //console.log(req.userId)
+        const user = await User.findById(req.params.id);
+        console.log(100, req.params.id,1111,user)
         return res.json(user);
     },
 
