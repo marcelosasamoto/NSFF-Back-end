@@ -1,6 +1,8 @@
 # NSFF-Back-end
 
-## Exemplo de uso da API
+## Exemplo de uso da API 
+Nota: **base_url** é o endereço do servidor 
+
 **Criação de usuario:** 
 <img src="https://github.com/marcelosasamoto/NSFF-Back-end/blob/master/API%20Doc/create%20user.png" width="800">
 
@@ -21,3 +23,4 @@
 
 **Atualizar dados do usuário:** 
 <img src="https://github.com/marcelosasamoto/NSFF-Back-end/blob/master/API%20Doc/update%20user.png" width="800">
+ 
