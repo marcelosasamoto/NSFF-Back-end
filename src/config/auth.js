@@ -1,4 +1,5 @@
+require('dotenv/config');
 module.exports = {
-    secret: 'paste_secret_key_hash_random',
+    secret: process.env.SECRET_KEY,
     expiresIn: '7d'
 };
