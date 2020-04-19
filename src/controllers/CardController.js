@@ -8,12 +8,12 @@ module.exports = {
         const { card } = await User.findById(req.params.id);
         for (i in card){
             if (card[i].number == req.body.card.number){
-                return res.json({message:"Cartão já está em uso"})
+                return res.status(400).json( {error: 'Cartão já está em uso'}); 
             }   //TALVEZ SENHA NECESSARIO COMPARAR O card.name PARA VERIFICAR SE PODE SER DE OUTRO BANCO
         }       
         const user = await User.findByIdAndUpdate(req.params.id,  
             { $push: { card: req.body.card } } , { new: true});
-        return res.json(user );
+        return res.json(user.card );
     
         
         
