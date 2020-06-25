@@ -6,7 +6,7 @@ const mensal = ['Sem 1','Sem 2','Sem 3','Sem 4']
 module.exports = {
     
     async graph (req, res) {
-        console.log(req.body)
+        //console.log(req.body)
         if (req.body.select === 'Anual'){
             let ChartDATA= mes.map(function (w) { return  {x:w,y:Math.floor(Math.random()*10000) }  });
             

@@ -14,16 +14,23 @@ const ProfileSchema = new mongoose.Schema({
 const CardSchema = new mongoose.Schema({
     name: {
         type: String,
+        required:true,
         default: ''
     },
     number: {
         type: Number,
+        required:true,
         default: 0
     },
     valid_until: {
         type: String,
+        required:true,
         default: ''
     },
+    idbank:{
+        type:String,
+        required:true
+    }
 });
 
 const UserSchema = new mongoose.Schema({
@@ -38,6 +45,10 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+    },
+    idbank:{
+        type:String,
+        default:''
     },
     profile: [ProfileSchema],
     card: [CardSchema],

@@ -1,19 +1,53 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
-
+const axios = require('axios');
+require('dotenv/config');
 module.exports = {
 
 
     async addCard(req, res) {
-        const { card } = await User.findById(req.params.id);
-        for (i in card){
-            if (card[i].number == req.body.card.number){
-                return res.status(400).json( {error: 'Cartão já está em uso'}); 
-            }   //TALVEZ SENHA NECESSARIO COMPARAR O card.name PARA VERIFICAR SE PODE SER DE OUTRO BANCO
-        }       
-        const user = await User.findByIdAndUpdate(req.params.id,  
-            { $push: { card: req.body.card } } , { new: true});
-        return res.json(user.card );
+        await User.findById(req.params.id)
+        .then(q=>{
+            card = q.card
+            let idbank
+            for (i in card){
+                if (card[i].number == req.body.card.number){
+                    return res.status(400).json( {error: 'Cartão já está em uso'}); 
+                }   //TALVEZ SENHA NECESSARIO COMPARAR O card.name PARA VERIFICAR SE PODE SER DE OUTRO BANCO
+            } 
+            axios.post(process.env.BANK_API.concat('acess'),{
+            cpf:req.body.card.cpf,
+            num:req.body.card.number
+            })
+            .then( async s => {
+                if(s.data.id === undefined){
+                    return res.json({message:'Cartão invalido'})
+                }else{
+                    idbank = s.data.id
+                    let cd = req.body.card
+                    cd.idbank = idbank
+                    console.log('cd',cd)
+                    await User.findByIdAndUpdate(req.params.id,  
+                        { $push: { card: req.body.card } } , { new: true})
+                        .then(s =>{
+                            return res.json(s.card)
+                        })
+                        .catch(s=>{
+                            console.log('Oppaaa')
+                        })
+                }
+                
+            })
+            .catch(err=>{
+                //console.log('err addcard',err)
+                
+            })
+        })
+        .catch(w=>{
+            
+        })
+       
+        
     
         
         

@@ -24,7 +24,8 @@ routes.delete("/user/:id/deletecard",CardController.deletecard);
 routes.get("/user/:id/card",CardController.showcard);
 
 routes.post("/user/:id/category",Category.category);
-
+routes.get("/user/:id/extrato",Category.extrato);
+routes.get("/user/:id/analise",Category.analise);
 routes.post("/user/:id/graph", IAController.graph);
 
 module.exports  = routes;
