@@ -34,7 +34,7 @@ module.exports = {
       
       User.findById(req.params.id)
         .then(resp =>{
-          axios.get('http://localhost:3200/api/user/'.concat(resp.idbank))
+          axios.get('http://localhost:3200/api/user/'.concat(resp.card[0].idbank))
           .then(response => {
             var transacoes = response.data.transacao
             console.log(3333,transacoes)
