@@ -48,7 +48,15 @@ module.exports = {
             for (transacao in transacoes){ // Depósitos não possuem categoria, e são calculados antes dos saques/transferências
               console.log('tran',transacoes[transacao])
               if (transacoes[transacao].tipo == "Deposito" || transacoes[transacao].tipo == "Transferencia"){
-                    totaldeposited += transacoes[transacao].valor//transacao['valor']
+                if (transacoes[transacao].tipo == "saque" && transacoes[transacao].valor <0)  {
+                  totaldeposited += transacoes[transacao].valor//transacao['valor']
+                }
+                else if (transacoes[transacao].tipo == "saque" && transacoes[transacao].valor >=0 || transacoes[transacao].tipo == "Deposito" && transacoes[transacao].valor <0)  {
+                  
+                }
+                else{
+                  totaldeposited += transacoes[transacao].valor//transacao['valor']
+                }
               } else {
                     if (transacoes[transacao].categoria == "entretenimento"){ // As Categorias são: Entretenimento (gasto ruim), Investimento (gasto bom), Despesa (gasto bom)
                       totalbadspent += transacoes[transacao].valor//transacao['valor']
@@ -102,7 +110,66 @@ module.exports = {
           });
         });
       
+    },
+    
+    async analise_array(req,res){
+      var transacoes = req.body
+      var totalspent = 0 //Total de gastos
+      var totalbadspent = 0 // Total de gastos ruins, entretenimento
+      var totalwellspent = 0 // Total de gastos bons, despesas e investimentos
+      var totaldeposited = 0 // Total depositado
+      var analysisresult = '' // String para armazenar o resultado na análise
+      for (transacao in transacoes){ // Depósitos não possuem categoria, e são calculados antes dos saques/transferências
+
+        if (transacoes[transacao].tipo == "Deposito" || transacoes[transacao].tipo == "Transferencia" || transacoes[transacao].tipo == "saque"){
+          if (transacoes[transacao].tipo == "saque" && transacoes[transacao].valor <0)  {
+            totaldeposited += transacoes[transacao].valor//transacao['valor']
+          }
+          else if (transacoes[transacao].tipo == "saque" && transacoes[transacao].valor >=0 || transacoes[transacao].tipo == "Deposito" && transacoes[transacao].valor <0)  {
+            
+          }
+          else{
+            totaldeposited += transacoes[transacao].valor//transacao['valor']
+          }
+        } else {
+              if (transacoes[transacao].categoria == "entretenimento"){ // As Categorias são: Entretenimento (gasto ruim), Investimento (gasto bom), Despesa (gasto bom)
+                totalbadspent += transacoes[transacao].valor//transacao['valor']
+              } else if (transacoes[transacao].categoria == "entreterimento"){
+              }
+              else{
+                totalwellspent += transacoes[transacao].valor
+              }
+          }
       }
+      var totalspent = totalbadspent + totalwellspent // Soma total de gastos
+      var grandtotal = totaldeposited - totalspent // Valor total movimentado na conta neste período
+      var performace
+      if (grandtotal > 0){ 
+        analysisresult = 'Suas ações na sua conta tem sido positivas! você depositou R$'+(grandtotal)+' a mais do que gastou!'
+        performance = ['positivo',grandtotal]
+      } else if ( grandtotal == 0){
+        performance = ['neutro',0]
+        analysisresult = 'Suas ações na sua conta tem sido neutras, você balanceou os gastos, porém, a ausência de atividade não gera lucro nem avanço. Tente um resultado positivo na próxima análise!'
+      }else{
+        grandtotal *= -1
+        performance = ['negativo',grandtotal]
+        analysisresult = 'Suas ações na sua conta tem sido negativas, você sacou R$'+(grandtotal)+' a mais do que depositou! Tente um resultado positivo na próxima análise!'
+      }
+      var status
+      if (totalwellspent > totalbadspent*0.25 && grandtotal > 0){
+        status = 'Parabéns, você teve bons gastos(despesas e investimentos)! Você teve R$'+(totalwellspent)+' em bons gastos recentemente!'
+      } else if (totalwellspent <= totalbadspent*0.25 && grandtotal > 0){
+        status = 'Você está em um mau caminho! Mais de 25% dos seus gastos são ruins! Você gastou R$'+((totalspent-totalwellspent))+' a mais com coisas não-importantes do que com coisas importantes/depósitos!'
+      }else if (grandtotal == 0) {
+        status = 'Você não movimentou sua conta recentemente!'
+        
+      }
+      return res.json({performace:performance})
+
+
+    }
+    
+
       
       
       

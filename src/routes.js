@@ -10,6 +10,7 @@ const authMiddleware = require('./middleware/auth');
 routes.post("/create",UserController.store);
 routes.post("/login",SessionController.Login);
 
+routes.post("/analise",Category.analise_array);  //API do nsff aberto
 routes.get("/user", UserController.index);
 
 routes.use(authMiddleware);
