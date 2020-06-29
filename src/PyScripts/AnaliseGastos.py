@@ -38,12 +38,11 @@ else:
 # Como o entretenimento é algo que está altamente presente, e apesar de não ser essencial, é bom o ter.
 # Por isso, o algoritmo visa alertar o usuário apenas em situações onde o gasto com entretenimento é excessivo, ou seja, apenas caso o total de gastos bons for igual ou menor a 25% dos gastos ruins.
 # Caso não tenha acontecido movimentação na conta, o algoritmo avisará o usuário.
-
-if totalwellspent > totalbadspent*0.25 and grandtotal > 0:
+print(analysisresult+'\n')
+if totalwellspent > totalbadspent*0.75 and grandtotal > 0:
   print('Você teve bons gastos(despesas e investimentos)! Você teve R$'+str(totalwellspent)+' em bons gastos recentemente!')
-elif totalwellspent <= totalbadspent*0.25 and grandtotal > 0:
+elif totalwellspent <= totalbadspent*0.75 and grandtotal > 0:
   print('Você está em um mau caminho! Mais de 25% dos seus gastos são ruins! Você gastou R$'+str((totalspent-totalwellspent))+' a mais com coisas não-importantes do que com coisas importantes/depósitos!')
 elif grandtotal == 0:
   print('Você não movimentou sua conta recentemente!')
 
-print(analysisresult)
